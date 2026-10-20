@@ -78,11 +78,11 @@ function buildEntry<E extends HTTPEvent>(
   // The binary tag digests the bytes rather than a storage form, so one representation keeps
   // one validator whichever backend holds it. A status that is never stored has no
   // representation to validate, so it gets no tag.
-  const etag = !isCacheableStatus(res.status)
-    ? undefined
-    : text === undefined
+  const etag = isCacheableStatus(res.status)
+    ? text === undefined
       ? `W/"b${hashBytes(bytes)}"`
-      : `W/"${hash(text)}"`;
+      : `W/"${hash(text)}"`
+    : undefined;
   const headers = buildHeaders(config, entry, res, etag);
 
   const cacheEntry: ResponseCacheEntry = {
